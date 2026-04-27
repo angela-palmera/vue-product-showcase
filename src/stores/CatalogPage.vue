@@ -1,56 +1,29 @@
 <template>
-  <q-page class="bg-background">
-    <section class="banner-section">
-      <q-img
-        v-if="$q.screen.gt.sm"
-        src="/Banner_desktop.jpg"
-        class="full-width"
-        style="height: auto; max-height: 600px;"
-        fit="cover"
-      />
-      <q-img
-        v-else
-        src="/Banner_mobile.jpg"
-        class="full-width"
-        style="height: auto; max-height: 500px;"
-        fit="cover"
-      />
-    </section>
-
-    <section class="q-pa-xl container-limit">
-      <div class="row items-center justify-center q-mb-xl">
-        <h1 class="text-h4 text-weight-light text-brand q-ma-none" style="letter-spacing: 2px;">
-          {{ filter === 'TODOS' ? 'NUESTROS FAVORITOS' : filter }}
-        </h1>
-        <q-btn v-if="filter !== 'TODOS'" flat label="Ver todos" color="grey-7" icon="close" @click="filter = 'TODOS'" no-caps class="q-ml-md" />
-      </div>
+  <q-page class="bg-background q-pa-xl">
+    <div class="container-limit">
+      <h1 class="text-h4 text-center text-weight-light q-mb-xl text-brand" style="letter-spacing: 2px;">
+        {{ store.filter }}
+      </h1>
 
       <div class="row q-col-gutter-xl justify-center">
-        <div 
-          v-for="product in filteredProducts" 
-          :key="product.id" 
-          class="col-12 col-sm-6 col-md-3"
-        >
-          <ProductCard 
-            :name="product.name" 
-            :price="product.price" 
-            :image="product.image"
-            :category="product.category"
-          />
+        <div v-for="product in filteredProducts" :key="product.id" class="col-12 col-sm-6 col-md-3">
+          <ProductCard v-bind="product" />
         </div>
       </div>
-    </section>
+      
+      <div class="text-center q-mt-xl">
+        <q-btn flat label="Volver al inicio" to="/" color="grey-7" no-caps />
+      </div>
+    </div>
   </q-page>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { useQuasar } from 'quasar'
-import { useProductStore } from 'src/stores/productStore' // Importar el store
+import { useProductStore } from 'src/stores/productStore'
 import ProductCard from 'components/ProductCard.vue'
 
-const $q = useQuasar()
-const store = useProductStore() // Usar el store
+const store = useProductStore()
 
 const products = [
   { id: 1, name: 'Crema Madagascar Centella', price: 30000, category: 'CREMAS', image: 'https://d1flfk77wl2xk4.cloudfront.net/Assets/skin-1004-madagascar-centella-soothing-cream-mini-30ml/30/709/XXL_p0173470930.jpg' },
@@ -59,7 +32,6 @@ const products = [
   { id: 4, name: 'Set Mascarillas BIODANCE', price: 30000, category: 'MASCARILLAS', image: 'https://d1flfk77wl2xk4.cloudfront.net/Assets/biodance-bundle-bio-collagen-real-deep-mask-set-refreshing-sea-kelp-real-deep-mask-set-hydro-cera-nol-real-deep-mask-set/13/803/XXL_p0219480313.jpg' }
 ]
 
-// Filtrar basándose en lo que diga el store
 const filteredProducts = computed(() => {
   if (store.filter === 'TODOS') return products
   return products.filter(p => p.category === store.filter)
@@ -67,7 +39,6 @@ const filteredProducts = computed(() => {
 </script>
 
 <style scoped>
-
 .bg-background { background-color: #F5EAE1; }
 .text-brand { color: #B1948B; }
 .container-limit { max-width: 1400px; margin: 0 auto; }

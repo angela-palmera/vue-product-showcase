@@ -1,22 +1,42 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+  <q-layout view="hHh lpR fFf">
+    <q-header class="bg-white text-dark" flat bordered>
+      <div class="bg-primary text-white text-center q-pa-xs text-caption">
+        Envío gratis por compras superiores a $60.000
+      </div>
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+      <q-toolbar class="q-py-md row items-center justify-between">
+        <div class="col-4">
+          <q-btn flat dense icon="menu" class="q-mr-sm lt-md" aria-label="Menu" />
+          <div class="gt-sm row gap-4 text-subtitle2">
+            <q-btn flat label="Cremas" to="/catalog" @click="store.setFilter('CREMAS')" />
+            <q-btn flat label="Serum" to="/catalog" @click="store.setFilter('SERUM')" />
+            <q-btn flat label="Mascarillas" to="/catalog" @click="store.setFilter('MASCARILLAS')" />
+          </div>
+        </div>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div class="col-4 text-center">
+          <q-btn flat no-caps to="/" class="q-pa-none" @click="store.setFilter('TODOS')">
+            <img 
+              src="/icons/logo.png" 
+              alt="nunaskincare.cl" 
+              style="max-height: 70px; object-fit: contain;" 
+            />
+          </q-btn>
+        </div>
+
+        <div class="col-4 text-right">
+          <q-btn flat round dense icon="search" class="q-mr-xs" />
+          <q-btn flat round dense icon="person_outline" class="q-mr-xs gt-xs" />
+          
+          <q-btn flat round dense icon="shopping_bag" to="/cart">
+            <q-badge v-if="store.cartCount > 0" color="red" floating>
+              {{ store.cartCount }}
+            </q-badge>
+          </q-btn>
+        </div>
       </q-toolbar>
     </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-    </q-drawer>
 
     <q-page-container>
       <router-view />
@@ -25,57 +45,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+import { useProductStore } from 'src/stores/productStore'
+const store = useProductStore()
 </script>
+
+<style scoped>
+.q-header {
+  border-bottom: 1px solid #E8DFD5;
+}
+</style>
