@@ -1,6 +1,6 @@
 # Quasar App (quasar-project)
 
-Catálogo de productos SPA
+Catálogo de productos NuniSkincare
 
 ## Install the dependencies
 

@@ -1,21 +1,23 @@
 <template>
-  <q-card class="product-card no-shadow" flat>
-    <q-img :src="image" :ratio="1" class="rounded-borders" />
+  <q-card class="my-card">
+    <q-img :src="image" style="height: 200px" fit="contain" class="q-pa-sm" />
 
-    <q-card-section class="q-px-none q-pt-md text-center">
-      <div class="text-overline text-grey-6">{{ category }}</div>
+    <q-card-section>
       <div class="text-subtitle1 text-weight-medium">{{ name }}</div>
-      <div class="text-body2 text-primary">$ {{ price.toLocaleString('es-CL') }}</div>
+      <div class="text-caption text-grey">{{ category }}</div>
+      
+      <div class="text-primary text-weight-bold q-mt-sm">
+        $ {{ (price || 0).toLocaleString('es-CL') }}
+      </div>
     </q-card-section>
 
-    <q-card-actions class="q-px-none">
+    <q-card-actions align="right">
       <q-btn 
-        outline 
+        flat 
         color="primary" 
-        label="Añadir al carrito" 
-        class="full-width"
+        label="Agregar" 
+        @click="onAddToCart"
         no-caps
-        @click="handleAddToCart"
       />
     </q-card-actions>
   </q-card>
@@ -23,11 +25,9 @@
 
 <script setup>
 import { useProductStore } from 'src/stores/productStore'
-import { useQuasar } from 'quasar'
 
-// Definimos las props
 const props = defineProps({
-  id: Number,
+  id: [Number, String],
   name: String,
   price: Number,
   image: String,
@@ -35,37 +35,24 @@ const props = defineProps({
 })
 
 const store = useProductStore()
-const $q = useQuasar()
 
-// Función para manejar el clic y mostrar la notificación
-const handleAddToCart = () => {
-  // Pasamos los datos de las props al store
+const onAddToCart = () => {
   store.addToCart({
-    id: props.id,
+    id: props.id || Date.now(),
     name: props.name,
     price: props.price,
     image: props.image,
     category: props.category
   })
-
-  // Lanzamos la notificación visual
-  $q.notify({
-    message: 'Producto añadido al carrito',
-    color: 'positive',
-    icon: 'check',
-    position: 'top-right',
-    timeout: 1000
-  })
 }
 </script>
 
 <style scoped>
-.product-card {
-  background: transparent;
-  transition: transform 0.3s ease;
-  cursor: pointer;
+.my-card {
+  border-radius: 12px;
+  transition: transform 0.2s;
 }
-.product-card:hover {
+.my-card:hover {
   transform: translateY(-5px);
 }
 </style>

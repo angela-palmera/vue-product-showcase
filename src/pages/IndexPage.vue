@@ -1,41 +1,31 @@
 <template>
   <q-page class="bg-background">
-    
-    <!-- Banner -->
-    <section class="banner-section">
+
+    <section v-if="showBanner">
       <q-img
-        v-if="$q.screen.gt.sm"
-        src="/vue-product-showcase/Banner_desktop.jpg"
+        :src="baseUrl + 'Banner_desktop.jpg'"
         class="full-width"
-        style="height: auto; max-height: 600px;"
-        fit="cover"
-      />
-      <q-img
-        v-else
-        src="/vue-product-showcase/Banner_mobile.jpg"
-        class="full-width"
-        style="height: auto; max-height: 500px;"
+        style="max-height: 600px;"
         fit="cover"
       />
     </section>
 
-    <!-- Productos -->
     <section class="q-pa-xl container-limit">
-      
+
       <div class="row items-center justify-center q-mb-xl">
-        <h1 class="text-h4 text-weight-light text-brand q-ma-none" style="letter-spacing: 2px;">
+        <h1 class="text-h4 text-weight-light text-brand q-ma-none text-uppercase" style="letter-spacing: 2px;">
           {{ store.filter === 'TODOS' ? 'NUESTROS FAVORITOS' : store.filter }}
         </h1>
 
-        <q-btn 
-          v-if="store.filter !== 'TODOS'" 
-          flat 
-          label="Ver todos" 
-          color="grey-7" 
-          icon="close" 
-          @click="store.filter = 'TODOS'" 
-          no-caps 
-          class="q-ml-md" 
+        <q-btn
+          v-if="store.filter !== 'TODOS'"
+          flat
+          label="Ver todos"
+          icon="close"
+          color="grey-7"
+          @click="store.setFilter('TODOS')"
+          class="q-ml-md"
+          no-caps
         />
       </div>
 
@@ -60,12 +50,20 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useQuasar } from 'quasar'
 import { useProductStore } from 'src/stores/productStore'
 import ProductCard from 'components/ProductCard.vue'
 
-const $q = useQuasar()
+// Definimos la prop que viene desde routes.js
+const props = defineProps({
+  showBanner: {
+    type: Boolean,
+    default: true // Por defecto se muestra, a menos que la ruta diga lo contrario
+  }
+})
+
 const store = useProductStore()
+
+const baseUrl = import.meta.env.BASE_URL
 
 const products = [
   { id: 1, name: 'Crema Madagascar Centella', price: 30000, category: 'CREMAS', image: 'https://d1flfk77wl2xk4.cloudfront.net/Assets/skin-1004-madagascar-centella-soothing-cream-mini-30ml/30/709/XXL_p0173470930.jpg' },
@@ -81,7 +79,16 @@ const filteredProducts = computed(() => {
 </script>
 
 <style scoped>
-.bg-background { background-color: #F5EAE1; }
-.text-brand { color: #B1948B; }
-.container-limit { max-width: 1400px; margin: 0 auto; }
+.bg-background {
+  background-color: #F5EAE1;
+}
+
+.text-brand {
+  color: #B1948B;
+}
+
+.container-limit {
+  max-width: 1400px;
+  margin: 0 auto;
+}
 </style>
