@@ -37,7 +37,8 @@ export default defineConfig((/* ctx */) => {
         node: 'node22',
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vvueRouterMode: 'hash', 
+      publicPath: '/vue-product-showcase/',
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
